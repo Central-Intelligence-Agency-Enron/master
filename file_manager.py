@@ -5,13 +5,21 @@ from pathlib import Path
 
 _maildir_path = Path("C:/Users/utilisateur/Desktop/maildir")
 
-def mail_location(link=None):
-    # print("Indiquer l'emplacement de maildir")
-    # link = Path(input())
+def get_mail_location():
+    print("Indiquer l'emplacement de maildir")
+    link = Path(input())
     return link
 
-def get_text(file_path):
-    raise NotImplementedError
+def get_text_from_list_file(list_file):
+    sum_text = str()
+
+    for file in list_file:
+        sum_text += get_text(file)
+
+    return sum_text
+
+def get_text(path_object):
+    return path_object.read_text()
 
 def get_files(folder_path, liste_fichier=[]):
     """ Retourne la liste des fichiers contenues dans le dossier spécifié
@@ -38,11 +46,17 @@ def get_files(folder_path, liste_fichier=[]):
 
 if __name__ == "__main__":
 
-    path = mail_location(_maildir_path)
+    path = Path("C:/Users/utilisateur/Desktop/maildir/arnold-j")
+
+    # path = get_mail_location()
 
     liste_fichier = get_files(path)
+
+    with open("arnold-j_mails.txt", "w", encoding="utf-8") as file:
+        file.write(
+            get_text_from_list_file(liste_fichier)
+        )
 
     print(
         "total de mails: ", len(liste_fichier)
         )
-
