@@ -46,6 +46,8 @@ def get_files(folder_path, liste_fichier=[]):
 
 if __name__ == "__main__":
 
+    
+
     path = Path("C:/Users/utilisateur/Desktop/maildir/arnold-j")
 
     # path = get_mail_location()
