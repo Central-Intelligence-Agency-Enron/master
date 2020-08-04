@@ -1,14 +1,16 @@
-from nltk.tokenize import word_tokenize
-from nltk.probability import FreqDist
-
 from pathlib import Path
 
+from mail_parser import mail_parser
+from text_functions import CleanText
+
 _maildir_path = Path("C:/Users/utilisateur/Desktop/maildir")
+
 
 def get_mail_location():
     print("Indiquer l'emplacement de maildir")
     link = Path(input())
     return link
+
 
 def get_text_from_list_file(list_file):
     sum_text = str()
@@ -18,8 +20,10 @@ def get_text_from_list_file(list_file):
 
     return sum_text
 
+
 def get_text(path_object):
     return path_object.read_text()
+
 
 def get_files(folder_path, liste_fichier=[]):
     """ Retourne la liste des fichiers contenues dans le dossier spécifié
@@ -46,17 +50,22 @@ def get_files(folder_path, liste_fichier=[]):
 
 if __name__ == "__main__":
 
-    
-
-    path = Path("C:/Users/utilisateur/Desktop/maildir/arnold-j")
+    path = Path("../maildir/arnold-j")
 
     # path = get_mail_location()
 
     liste_fichier = get_files(path)
 
-    with open("arnold-j_mails.txt", "w", encoding="utf-8") as file:
+    text_sum = str()
+    for file in liste_fichier:
+        with open(file, 'r') as mail_file:
+            message = mail_parser(mail_file)
+            message_cleaned = CleanText(message.content).preprocessing()
+            text_sum += message_cleaned
+
+    with open("cleaned_arnold-j_mails.txt", "w", encoding="utf-8") as file:
         file.write(
-            get_text_from_list_file(liste_fichier)
+            text_sum
         )
 
     print(
