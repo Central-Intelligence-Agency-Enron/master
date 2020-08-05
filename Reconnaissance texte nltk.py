@@ -17,7 +17,7 @@ text = lemmatizer.lemmatize(text)
 liste = tokenizer.tokenize(text)
 fdist = FreqDist(liste)
 top = fdist.most_common(5000)
-
+print((top[5])[1])
 
 with open("C:/Users/David/Documents/GIT/ENRON/master/nb_mots.txt", "w", encoding="utf-8") as file :
     file.write(str(top))
