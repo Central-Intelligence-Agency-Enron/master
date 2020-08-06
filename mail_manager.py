@@ -32,22 +32,24 @@ class mail():
     def _get_content(self):
         return self.message.get_payload()
 
+
 class user_mail():
 
     def __init__(self, user, mail_path):
         self.user = user
-        self.list_mail = self._build_list_mail(mail_path)
+        self.list_mail = []
+        self._build_list_mail(mail_path)
 
     def _build_list_mail(self, mail_path):
-        list_mail = []
         print('exploration du dossier user ' + mail_path.name)
-        for mail_file in mail_manager.get_files(mail_path):
+        list_fichier = mail_manager.get_files(mail_path, [])
+
+        for mail_file in list_fichier:
             with open(mail_file, "r") as f:
-                list_mail.append(
+                self.list_mail.append(
                     mail(mail_file.parent.name, f)
                 )
-        return list_mail
-    
+
     def export_csv(self):
         #data = DataFrame()
         list_from_address = []
@@ -74,23 +76,14 @@ class user_mail():
             list_date.append(mail.get('Date'))
             list_origin.append(mail.get('X-Origin'))
             list_file.append(mail.get('X-Folder') + mail.get('X-FileName'))
-            
+
         dict_email = {
-            'from_address': list_from_address
-            , 'from_name': list_from_name
-            , 'to_address': list_to_address
-            , 'to_name': list_to_name
-            , 'cc': list_cc
-            , 'bcc': list_bcc
-            , 'content': list_content
-            , 'title': list_title
-            , 'date': list_date
-            , 'origin': list_origin
-            , 'file': list_file
+            'from_address': list_from_address, 'from_name': list_from_name, 'to_address': list_to_address, 'to_name': list_to_name, 'cc': list_cc, 'bcc': list_bcc, 'content': list_content, 'title': list_title, 'date': list_date, 'origin': list_origin, 'file': list_file
         }
 
         df_mail = DataFrame.from_dict(dict_email)
         df_mail.to_csv('user_csv/' + self.user + '.csv')
+
 
 class mail_manager():
 
@@ -117,7 +110,7 @@ class mail_manager():
         return link
 
     @classmethod
-    def get_files(cls, folder_path, liste_fichier=[]):
+    def get_files(cls, folder_path, liste_fichier):
         """ Retourne la liste des fichiers contenus dans le dossier spécifié
 
         Args:
@@ -134,7 +127,7 @@ class mail_manager():
             elif path.is_file():
                 liste_fichier.append(path)
             else:
-                print('truc chelou: ', )
+                print('truc chelou: ')
                 continue
 
         return liste_fichier
