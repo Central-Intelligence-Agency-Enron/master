@@ -7,7 +7,8 @@ import time
 
 class mail():
 
-    def __init__(self, box_type, mail_file):
+    def __init__(self, box_type, mail_file, path):
+        self.path = path
         self.box_type = box_type
         self.message = self._parse_mail(mail_file.read())
         self.header = self._get_header()
@@ -47,11 +48,11 @@ class user_mail():
         for mail_file in list_fichier:
             with open(mail_file, "r") as f:
                 self.list_mail.append(
-                    mail(mail_file.parent.name, f)
+                    mail(mail_file.parent.name, f, mail_file)
                 )
 
     def export_csv(self):
-        #data = DataFrame()
+        list_path = []
         list_from_address = []
         list_from_name = []
         list_to_address = []
@@ -65,6 +66,7 @@ class user_mail():
         list_file = []
 
         for mail in self.list_mail:
+            list_path.append(str(mail.path.absolute()))
             list_from_address.append(mail.get("From"))
             list_from_name.append(mail.get("X-From"))
             list_to_address.append(mail.get("To"))
@@ -78,7 +80,7 @@ class user_mail():
             list_file.append(mail.get('X-Folder') + mail.get('X-FileName'))
 
         dict_email = {
-            'from_address': list_from_address, 'from_name': list_from_name, 'to_address': list_to_address, 'to_name': list_to_name, 'cc': list_cc, 'bcc': list_bcc, 'content': list_content, 'title': list_title, 'date': list_date, 'origin': list_origin, 'file': list_file
+            'path': list_path, 'from_address': list_from_address, 'from_name': list_from_name, 'to_address': list_to_address, 'to_name': list_to_name, 'cc': list_cc, 'bcc': list_bcc, 'content': list_content, 'title': list_title, 'date': list_date, 'origin': list_origin, 'file': list_file
         }
 
         df_mail = DataFrame.from_dict(dict_email)
@@ -134,6 +136,6 @@ class mail_manager():
 
 
 if __name__ == '__main__':
-    maildir = Path("../../maildir")
+    maildir = Path("../maildir")
     manager = mail_manager(maildir)
     manager.export_csv()
