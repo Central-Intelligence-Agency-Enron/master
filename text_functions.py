@@ -11,8 +11,8 @@
 import re
 import string
 import nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
 from nltk import word_tokenize 
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet as wn
@@ -84,6 +84,22 @@ class CleanText:
         tagged_pos = pos_tag(tokenized_words)
         wordnet_pos = [self.get_wordnet_pos(word[1]) for word in tagged_pos]
         return " ".join([wn_lemmatizer.lemmatize(pair[0], pair[1]) for pair in zip(tokenized_words, wordnet_pos)])
+
+    def remove_forwarded(self, text):
+        forwarded = "---------------------- Forwarded by"
+        subject = 'Subject:'
+
+        while text.find(forwarded) > -1:
+            previous_text = text[:text.find(forwarded)]
+
+            subject_index = text.find(forwarded) + text[text.find(forwarded):].find(subject)
+            next_text = text[subject_index + text[subject_index:].find('\n'):]
+
+            text = previous_text + next_text
+        return text
+
+    def remove_blank(self, text):
+        return "".join([s for s in text.strip().splitlines(True) if s.strip()])
 
     def preprocessing(self):
         text = self.remove_stop_words(self.text)
