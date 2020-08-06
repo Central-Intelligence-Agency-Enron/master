@@ -134,6 +134,6 @@ class mail_manager():
 
 
 if __name__ == '__main__':
-    maildir = Path("../maildir")
+    maildir = Path("../../maildir")
     manager = mail_manager(maildir)
     manager.export_csv()
