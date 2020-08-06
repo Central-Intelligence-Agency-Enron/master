@@ -40,6 +40,7 @@ class user_mail():
 
     def _build_list_mail(self, mail_path):
         list_mail = []
+        print('exploration du dossier user ' + mail_path.name)
         for mail_file in mail_manager.get_files(mail_path):
             with open(mail_file, "r") as f:
                 list_mail.append(
@@ -100,9 +101,9 @@ class mail_manager():
     def _build_user_mail(self, folder_path):
         list_user = []
         for path in folder_path.iterdir():
-            list_user.append(
-                user_mail(path.name, path)
-            )
+            # list_user.append(
+            user_mail(path.name, path).export_csv()
+            # )
         return list_user
 
     def export_csv(self):
@@ -140,8 +141,6 @@ class mail_manager():
 
 
 if __name__ == '__main__':
-    # maildir = Path("../maildir")
-    # manager = mail_manager(maildir)
-    # manager.export_csv()
-
-    print('oui')
+    maildir = Path("../maildir")
+    manager = mail_manager(maildir)
+    manager.export_csv()
