@@ -54,6 +54,8 @@ class CleanText:
         return punc_re.sub('', text)
 
     def remove_stop_words(self, text):
+        nltk.download('stopwords', quiet=True)
+
         en_stopwords = set(stopwords.words('english'))
         tokenized_words = word_tokenize(text)
         return (" ".join([word for word in tokenized_words if word not in en_stopwords]))
@@ -62,6 +64,8 @@ class CleanText:
         """
         Translate part of speech into wordnet tag of speech
         """
+
+        nltk.download('wordnet', quiet=True)
 
         if tagged_word.startswith('J'):
             return wn.ADJ
@@ -78,6 +82,8 @@ class CleanText:
         """
         Do the lematization for the text
         """
+        nltk.download('wordnet', quiet=True)
+
         wn_lemmatizer = WordNetLemmatizer()
         tokenized_words = word_tokenize(text)
         # tag part of speech on each token
@@ -85,16 +91,33 @@ class CleanText:
         wordnet_pos = [self.get_wordnet_pos(word[1]) for word in tagged_pos]
         return " ".join([wn_lemmatizer.lemmatize(pair[0], pair[1]) for pair in zip(tokenized_words, wordnet_pos)])
 
-    def remove_forwarded(self, text):
+    def remove_forwarded_and_response(self, text):
+        my_text = self._remove_forwarded(text)
+
+    def _remove_forwarded(self, text):
         forwarded = "---------------------- Forwarded by"
         subject = 'Subject:'
 
-        while text.find(forwarded) > -1:
+        while forwarded in text:
             previous_text = text[:text.find(forwarded)]
 
             subject_index = text.find(forwarded) + text[text.find(forwarded):].find(subject)
-            next_text = text[subject_index + text[subject_index:].find('\n'):]
+            next_text = text[subject_index + text[subject_index:].find('\n') + 2:]
 
+            text = previous_text + next_text
+        return text
+
+    def _remove_response(self, text):
+        subject = 'Subject:'
+
+        while 'To:' in text and 'cc:' in text and 'Subject:' in text:
+            previous_text = text[:text.find('To:') - 2]
+            # remove 2 trailling text between '\n'
+            previous_text = previous_text[:previous_text.rfind('\n')]
+            previous_text = previous_text[:previous_text.rfind('\n')]
+
+            next_text = text[text.find(subject):]
+            next_text = next_text[next_text.find('\n') + 2:]
             text = previous_text + next_text
         return text
 
