@@ -93,6 +93,7 @@ class CleanText:
 
     def remove_forwarded_and_response(self, text):
         my_text = self._remove_forwarded(text)
+        return self._remove_response(my_text)
 
     def _remove_forwarded(self, text):
         forwarded = "---------------------- Forwarded by"
