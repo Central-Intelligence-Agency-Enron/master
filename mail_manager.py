@@ -4,6 +4,8 @@ from pandas import DataFrame
 import pandas as pd
 import time
 
+import re
+
 
 class mail():
 
@@ -31,7 +33,9 @@ class mail():
         self.message.get
 
     def _get_content(self):
-        return self.message.get_payload()
+        # filtre
+        regex = re.compile("(---+|.+@)")
+        return regex.split(self.message.get_payload())[0]
 
 
 class user_mail():
@@ -66,6 +70,11 @@ class user_mail():
         list_file = []
 
         for mail in self.list_mail:
+            if mail.content:
+                list_content.append(mail.content)
+            else:
+                continue
+
             list_path.append(str(mail.path.absolute()))
             list_from_address.append(mail.get("From"))
             list_from_name.append(mail.get("X-From"))
@@ -73,7 +82,7 @@ class user_mail():
             list_to_name.append(mail.get("X-To"))
             list_cc.append(mail.get("X-cc"))
             list_bcc.append(mail.get("X-bcc"))
-            list_content.append(mail.content)
+
             list_title.append(mail.get('Subject'))
             list_date.append(mail.get('Date'))
             list_origin.append(mail.get('X-Origin'))
@@ -84,7 +93,7 @@ class user_mail():
         }
 
         df_mail = DataFrame.from_dict(dict_email)
-        df_mail.to_csv('user_csv/' + self.user + '.csv')
+        df_mail.to_csv('s_user_csv/' + self.user + '.csv')
 
 
 class mail_manager():

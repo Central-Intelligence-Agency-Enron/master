@@ -11,8 +11,8 @@
 import re
 import string
 import nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
 from nltk import word_tokenize 
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet as wn
@@ -37,8 +37,8 @@ class CleanText:
         Returns:
             [string]: [a text without non alphabet]
         """
-        non_alpha_char_re = re.compile('[^a-zA-Z0-9 ]')
-        return non_alpha_char_re.sub('', text.strip().lower())
+        non_alpha_char_re = re.compile('[^a-zA-Z0-9{$}]')
+        return non_alpha_char_re.sub(' ', text.strip().lower())
 
 
     def remove_punctuation(self, text):
@@ -54,6 +54,8 @@ class CleanText:
         return punc_re.sub('', text)
 
     def remove_stop_words(self, text):
+        nltk.download('stopwords', quiet=True)
+
         en_stopwords = set(stopwords.words('english'))
         tokenized_words = word_tokenize(text)
         return (" ".join([word for word in tokenized_words if word not in en_stopwords]))
@@ -62,6 +64,8 @@ class CleanText:
         """
         Translate part of speech into wordnet tag of speech
         """
+
+        nltk.download('wordnet', quiet=True)
 
         if tagged_word.startswith('J'):
             return wn.ADJ
@@ -78,12 +82,48 @@ class CleanText:
         """
         Do the lematization for the text
         """
+        nltk.download('wordnet', quiet=True)
+
         wn_lemmatizer = WordNetLemmatizer()
         tokenized_words = word_tokenize(text)
         # tag part of speech on each token
         tagged_pos = pos_tag(tokenized_words)
         wordnet_pos = [self.get_wordnet_pos(word[1]) for word in tagged_pos]
         return " ".join([wn_lemmatizer.lemmatize(pair[0], pair[1]) for pair in zip(tokenized_words, wordnet_pos)])
+
+    def remove_forwarded_and_response(self, text):
+        my_text = self._remove_forwarded(text)
+        return self._remove_response(my_text)
+
+    def _remove_forwarded(self, text):
+        forwarded = "---------------------- Forwarded by"
+        subject = 'Subject:'
+
+        while forwarded in text:
+            previous_text = text[:text.find(forwarded)]
+
+            subject_index = text.find(forwarded) + text[text.find(forwarded):].find(subject)
+            next_text = text[subject_index + text[subject_index:].find('\n') + 2:]
+
+            text = previous_text + next_text
+        return text
+
+    def _remove_response(self, text):
+        subject = 'Subject:'
+
+        while 'To:' in text and 'cc:' in text and 'Subject:' in text:
+            previous_text = text[:text.find('To:') - 2]
+            # remove 2 trailling text between '\n'
+            previous_text = previous_text[:previous_text.rfind('\n')]
+            previous_text = previous_text[:previous_text.rfind('\n')]
+
+            next_text = text[text.find(subject):]
+            next_text = next_text[next_text.find('\n') + 2:]
+            text = previous_text + next_text
+        return text
+
+    def remove_blank(self, text):
+        return "".join([s for s in text.strip().splitlines(True) if s.strip()])
 
     def preprocessing(self):
         text = self.remove_stop_words(self.text)
