@@ -1,8 +1,5 @@
 import pandas as pd
 import numpy as np
-import nltk
-from pathlib import Path
-import os
 import nltk.corpus
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
@@ -11,10 +8,14 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 
+"""Extraction des textes des fichiers csv des personnes conetnues dans liste_personnes
+Comptage des mots présent dans les mails et création du top 10 000 des mots
+Impression d'un graphique montrant le ratio des mots présents dans liste_mots par mail et par personne
+"""
 
 i = 0
 liste_personnes = ["kean-s", "shackleton-s", "dasovich-j", "cash-m", "farmer-d"]
-liste_mots= ["dollar", "buy", "sell", "trade", "agreement", "transaction"]
+liste_mots = ["dollar", "buy", "sell", "trade", "agreement", "transaction"]
 liste_top = []
 data_top = []
 
@@ -40,7 +41,7 @@ for name in liste_personnes:
 
 for top in liste_top:
     word_values = []
-    for word in liste_mots :
+    for word in liste_mots:
         nb_word = sum(top["Nb d'apparition"][top['Mot'].str.contains(word)])/len(top)
         word_values.append(nb_word)
     word_values = np.concatenate((word_values, [word_values[0]]))
