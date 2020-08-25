@@ -37,8 +37,8 @@ class CleanText:
         Returns:
             [string]: [a text without non alphabet]
         """
-        non_alpha_char_re = re.compile('[^a-zA-Z0-9 ]')
-        return non_alpha_char_re.sub('', text.strip().lower())
+        non_alpha_char_re = re.compile('[^a-zA-Z0-9{$}]')
+        return non_alpha_char_re.sub(' ', text.strip().lower())
 
 
     def remove_punctuation(self, text):
