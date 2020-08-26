@@ -1,6 +1,7 @@
 """ Extraction des textes des fichiers csv des personnes conetnues dans liste_personnes
 Comptage des mots présent dans les mails et création du top 10 000 des mots
-Impression d'un graphique montrant le ratio des mots présents dans liste_mots par mail et par personne
+Impression d'un graphique montrant le ratio des mots
+présents dans liste_mots par mail et par personne
 """
 
 import pandas as pd
@@ -11,8 +12,10 @@ import matplotlib.pyplot as plt
 
 
 i = 0
-LISTE_PERSONNES = ["kean-s", "shackleton-s", "dasovich-j", "cash-m", "farmer-d", "stokley-c", "harris-s"]
-LISTE_MOTS = ["dollar", "buy", "sell", "trade", "agreement", "transaction", "exchange", "concluded"]
+LISTE_PERSONNES = ["kean-s", "shackleton-s", "dasovich-j", "cash-m", "farmer-d",
+                   "stokley-c", "harris-s"]
+LISTE_MOTS = ["dollar", "buy", "sell", "trade", "agreement", "transaction",
+              "exchange", "shares", "paid", "taxes"]
 LISTE_TOP = []
 DATA_TOP = []
 
@@ -49,6 +52,5 @@ for values in DATA_TOP:
     plt.plot(LABEL_PLACEMENT, values)
 
 LINES, LABELS = plt.thetagrids(np.degrees(LABEL_PLACEMENT), labels=LISTE_MOTS)
-plt.legend(labels=LISTE_PERSONNES)
+plt.legend(labels=LISTE_PERSONNES, loc=(0.95, 0.9))
 plt.show()
-
