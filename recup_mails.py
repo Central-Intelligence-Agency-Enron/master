@@ -25,5 +25,5 @@ def recup_mails(liste_mots):
                     morceau_data_frame = pd.DataFrame(ar_mail,
                                                       columns=['Nom_utilisateur', 'Contenu_mail'])
                     data_frame_resultat = pd.concat([data_frame_resultat, morceau_data_frame])
-    data_frame_resultat = data_frame_resultat.drop_duplicates(subset=['Contenu_mail'])
-    data_frame_resultat.to_csv('../liste_mails.csv')
+        data_frame_resultat = data_frame_resultat.drop_duplicates(subset=['Contenu_mail'])
+        data_frame_resultat.to_csv('../csv_trié/' + util)
