@@ -26,4 +26,3 @@ def recup_mails(liste_mots):
                                                       columns=['Nom_utilisateur', 'Contenu_mail'])
                     data_frame_resultat = pd.concat([data_frame_resultat, morceau_data_frame])
     data_frame_resultat.to_csv('../liste_mails.csv')
-
