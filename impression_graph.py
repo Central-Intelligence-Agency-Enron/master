@@ -19,6 +19,7 @@ LISTE_MOTS = ["dollar", "buy", "sell", "trade", "agreement", "transaction",
 LISTE_TOP = []
 DATA_TOP = []
 
+
 #Initialisation des fonctions
 TOKENIZER = RegexpTokenizer(r'\w+')
 
@@ -45,11 +46,13 @@ for top in LISTE_TOP:
     word_values = np.concatenate((word_values, [word_values[0]]))
     DATA_TOP.append(word_values)
 
+
 LABEL_PLACEMENT = np.linspace(start=0, stop=2*np.pi, num=len(word_values))
 plt.figure(figsize=(10, 10))
 plt.subplot(polar=True)
 for values in DATA_TOP:
     plt.plot(LABEL_PLACEMENT, values)
+
 
 LINES, LABELS = plt.thetagrids(np.degrees(LABEL_PLACEMENT), labels=LISTE_MOTS)
 plt.legend(labels=LISTE_PERSONNES, loc=(0.95, 0.9))
