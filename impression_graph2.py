@@ -45,11 +45,11 @@ def impression_graph(liste_mots):
 
 
     LINES, LABELS = plt.thetagrids(np.degrees(LABEL_PLACEMENT), labels=liste_mots)
-    plt.legend(labels=liste_util, loc=(0.95, 0.9))
+    plt.legend(labels=liste_util, loc=(0.90, 0.80))
     plt.show()
 
 
-def impression_graph(liste_mots):
+def impression_graph2(liste_mots):
     liste_util = os.listdir('../csv_trié')
     data_frame_final = pd.DataFrame(columns=['Mot', '''Nb d'apparition'''])
     for name in liste_util:
@@ -64,7 +64,7 @@ def impression_graph(liste_mots):
 
         data_frame = pd.DataFrame(top, columns=['Mot', '''Nb d'apparition'''])
         data_frame_final = pd.concat([data_frame_final, data_frame])
-        LISTE_TOP.append(data_frame_final)
+    LISTE_TOP.append(data_frame_final)
 
 
     for top in LISTE_TOP:
@@ -83,5 +83,6 @@ def impression_graph(liste_mots):
 
 
     LINES, LABELS = plt.thetagrids(np.degrees(LABEL_PLACEMENT), labels=liste_mots)
-    plt.legend(labels=liste_util, loc=(0.95, 0.9))
+    plt.legend(labels=['total'], loc=(0.90, 0.80))
     plt.show()
+

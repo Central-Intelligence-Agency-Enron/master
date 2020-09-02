@@ -15,8 +15,8 @@ def recup_mails(liste_mots):
     """
 
     liste_util = os.listdir('./s_user_csv')
-    data_frame_resultat = pd.DataFrame(columns=['Nom_utilisateur', 'Contenu_mail'])
     for util in liste_util:
+        data_frame_resultat = pd.DataFrame(columns=['Nom_utilisateur', 'Contenu_mail'])
         csv = pd.read_csv('./s_user_csv/' + util)
         for row in csv['content']:
             for word in liste_mots:
